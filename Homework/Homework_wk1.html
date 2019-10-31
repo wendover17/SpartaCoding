@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Star Bike</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css/shop-item.css" rel="stylesheet">
+
+  <script type="text/javascript">
+
+      function order() {
+        let name = $('#order_name').val();
+        let count = $('#order_count').val();
+        let address = $('#order_address').val();
+        let phone = $('#order_phone').val();
+        let item = 'MTB자전거';
+
+        $.ajax({
+          type: "POST",
+          url: "http://spartacodingclub.shop/order", //이 url 을 어떻게 만들어야 할지 잘 모르겠습니다. 이것때문에 '주문하기'' 이후 주문자 리스트에 post/get 이 잘 안되는 것 맞나요?
+          data: { name_give:name, count_give:count, address_give:address, phone_give:phone, item_give:item },
+          success: function(response){
+            if(response['result'] == 'success'){ 
+              alert('결재창으로 이동할까요?');
+              window.location.reload();
+            }
+          }
+        })
+      }
+
+      $(document).ready(function(){
+        $('#orders-box').html('');
+        listing();
+      });
+
+      function listing() {
+        $.ajax({
+          type: "GET",
+          url: "http://spartacodingclub.shop/order?item_give=MTB자전거", //'order?'이후에 있는 글자들의 의미가 궁금합니다.
+          data: {},
+          success: function(response){
+             if (response['result'] == 'success') {
+               let orders = response['orders'];
+               for (let i = 0; i < orders.length; i++) {
+                 make_card(orders[i]['item'],orders[i]['name'],orders[i]['count'],orders[i]['address'],orders[i]['phone'])
+               }
+             } 
+          }
+        })
+      }
+
+      function make_card(item,name,count,address,phone) {
+        let temp_html = '<tr>\
+            <td>'+item+'</td>\
+            <td>'+name+'</td>\
+            <td>'+count+'</td>\
+            <td>'+address+'</td>\
+            <td>'+phone+'</td>\
+          </tr>';
+        $('#orders-box').append(temp_html);
+      }
+    
+    function basket() {
+      alert('쇼핑을 계속 할까요?');
+    }
+
+  </script>
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">Star Bike</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span> <!-- span 은 어떤 때 사용하는 건가요? -->
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Best
+             <span class="sr-only">(current)</span>
+           </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Sale</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Cart</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+
+  <div class="container">
+
+    <div class="row">
+
+      <div class="col-lg-3">
+        <h1 class="my-4">종류별 자전거</h1>
+        <div class="list-group">
+          <a href="#" class="list-group-item active">MTB</a>
+          <a href="#" class="list-group-item">Road(싸이클)</a>
+          <a href="#" class="list-group-item">Hybrid</a>
+        </div>
+      </div>
+      <!-- /.col-lg-3 -->
+
+      <div class="col-lg-9">
+
+        <div class="card mt-4">
+          <img class="card-img-top img-fluid" src="https://previews.123rf.com/images/underworld/underworld1603/underworld160300793/54280970-%ED%98%84%EB%8C%80-%EB%A0%88%EB%93%9C-%EC%A0%84%EC%B2%B4-%EC%84%9C%EC%8A%A4%ED%8E%9C%EC%85%98-%EC%82%B0%EC%95%85-%EC%9E%90%EC%A0%84%EA%B1%B0-mtb-%EC%9E%90%EC%A0%84%EA%B1%B0.jpg" alt="">
+          <div class="card-body">
+            <h3 class="card-title">레드 전체 서스펜션 산악 자전거 MTB 자전거</h3>
+            <h4>399,000</h4>
+            <p class="card-text">27.5 알루미늄 MTB 프레임 / 스틸 서스펜션 포크 / 유압식 디스크브레이크 / SHIMANO M315</p>
+            <span class="text-warning">&#9733; &#9733; &#9733; &#9733; &#9734;</span>
+            (73)
+          </div>
+        </div>
+        <!-- /.card -->
+
+        <div class="card card-outline-secondary my-4">
+          <div class="card-header">
+            <h4>상품 주문하기</h4>
+          </div>
+          <div class="card-body">
+            <form>
+              <div class="form-group row">
+                <label for="inputname" class="col-sm-2 col-form-label">주문자 성함 :</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="order_name" placeholder="홍길동">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="inputcount" class="col-sm-2 col-form-label">수량 :</label>
+                <select class="custom-select col-sm-10" id="order_count"> <!-- 여기가 칸이 애매하게 큰데 숫자를 바꿔도 다른 열하고 크기가 안 맞아요..ㅠㅜ -->
+                  <option selected>선택하기</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                </select>
+              </div>
+              <div class="form-group row">
+                <label for="inputaddress" class="col-sm-2 col-form-label">주소 :</label>
+                <div class="col-sm-10">
+                  <input type="name" class="form-control" id="order_address">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="inputphoneno" class="col-sm-2 col-form-label">전화번호 :</label>
+                <div class="col-sm-10">
+                  <input type="name" class="form-control" id="order_phone">
+                </div>
+              </div>
+            </form>
+            <button onclick="order()" type="button" href="#" class="btn btn-success">바로 주문하기</button>
+            <button onclick="basket()" type="button" href="#" class="btn btn-success">장바구니 담기</button>
+          </div>
+        </div>
+        <!-- /.card -->
+
+      </div>
+      <!-- /.col-lg-9 -->
+
+    </div>
+
+  </div>
+  <!-- /.container -->
+<div class="orders">
+  <table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">상품명</th>
+      <th scope="col">이름</th>
+      <th scope="col">수량</th>
+      <th scope="col">주소</th>
+      <th scope="col">전화번호</th>
+    </tr>
+  </thead>
+  <tbody id="orders-box">
+    <tr>
+      <th scope="row">MTB자전거</th>
+      <td></td>
+      <td>선택하기</td>
+      <td></td>
+      <td></td>
+    </tr>
+    
+    
+  </tbody>
+</table>
+</div>
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; Your Website 2019</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
